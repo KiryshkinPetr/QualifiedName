@@ -26,13 +26,9 @@ public class ParserTest {
     @DataProvider
     public Object[][] validNameProvider() {
         return new Object[][]{
-                {
-                        new String[]{
-                                "name",
-                                "prefix:name",
-                                "prefix:name name"
-                        }
-                }
+                {"name"},
+                {"prefix:name"},
+                {"prefix:na me"}
         };
     }
 
@@ -40,23 +36,19 @@ public class ParserTest {
     @DataProvider
     public Object[][] inValidNameProvider() {
         return new Object[][]{
-                {
-                        new String[]{
-                                "",
-                                ":name",
-                                ".",
-                                "..",
-                                "prefix:",
-                                " name",
-                                " prefix:name",
-                                "prefix: name",
-                                "prefix:name ",
-                                "pre fix:name",
-                                "name/name",
-                                "name[name",
-                                "prefix:name:name"
-                        }
-                }
+                {""},
+                {":name"},
+                {"."},
+                {".."},
+                {"prefix:"},
+                {" name"},
+                {" prefix:name"},
+                {"prefix: name"},
+                {"prefix:name "},
+                {"pre fix:name"},
+                {"name/name"},
+                {"name[name"},
+                {"prefix:name:name"},
         };
     }
 
@@ -107,22 +99,16 @@ public class ParserTest {
     }
 
     //Testing valid names
-    @Test(dataProvider = "validNameProvider")
-    public void validNameTest(String[] names) {
-
-        for (String temp : names) {
-            boolean valid = parser.validate(temp);
-            Assert.assertEquals(valid, true);
-        }
+    @Test(dataProvider = "validNameProvider", ignoreMissingDependencies = true)
+    public void validNameTest(String name) {
+        boolean valid = parser.validate(name);
+        Assert.assertEquals(valid, true);
     }
 
     //Testing invalid names
-    @Test(dataProvider = "inValidNameProvider", dependsOnMethods = "validNameTest")
-    public void InValidNameTest(String[] names) {
-
-        for (String temp : names) {
-            boolean valid = parser.validate(temp);
-            Assert.assertEquals(valid, false);
-        }
+    @Test(dataProvider = "inValidNameProvider")
+    public void InValidNameTest(String name) {
+        boolean valid = parser.validate(name);
+        Assert.assertEquals(valid, false);
     }
 }
